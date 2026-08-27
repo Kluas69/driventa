@@ -1,0 +1,12 @@
+# reverse-eng
+
+_6 skill(s). Auto-generated — do not edit._
+
+| Skill | Description | Tags |
+| --- | --- | --- |
+| [`binary-analysis-patterns`](binary-analysis-patterns/SKILL.md) | Master binary analysis patterns including disassembly, decompilation, control flow analysis, and code pattern recognition. Use when analyzing executables, understanding compiled code, or performing static analysis on binaries. | `reverse-eng` `binary` `analysis` |
+| [`firmware-analyst`](firmware-analyst/SKILL.md) | Expert firmware analyst specializing in embedded systems, IoT security, and hardware reverse engineering. Masters firmware extraction, analysis, and vulnerability research for routers, IoT devices, automotive systems, and industrial controllers. Use PROACTIVELY for firmware security audits, IoT penetration testing, or embedded systems research. | `reverse-eng` `firmware` `analyst` |
+| [`malware-analyst`](malware-analyst/SKILL.md) | Expert malware analyst specializing in defensive malware research, threat intelligence, and incident response. Masters sandbox analysis, behavioral analysis, and malware family identification. Handles static/dynamic analysis, unpacking, and IOC extraction. Use PROACTIVELY for malware triage, threat hunting, incident response, or security research. | `reverse-eng` `malware` `analyst` |
+| [`memory-forensics`](memory-forensics/SKILL.md) | Master memory forensics techniques including memory acquisition, process analysis, and artifact extraction using Volatility and related tools. Use when analyzing memory dumps, investigating incidents, or performing malware analysis from RAM captures. | `reverse-eng` `memory` `forensics` |
+| [`protocol-reverse-engineering`](protocol-reverse-engineering/SKILL.md) | Master network protocol reverse engineering including packet analysis, protocol dissection, and custom protocol documentation. Use when analyzing network traffic, understanding proprietary protocols, or debugging network communication. | `reverse-eng` `protocol` `reverse` `engineering` |
+| [`reverse-engineer`](reverse-engineer/SKILL.md) | Expert reverse engineer specializing in binary analysis, disassembly, decompilation, and software analysis. Masters IDA Pro, Ghidra, radare2, x64dbg, and modern RE toolchains. Handles executable analysis, library inspection, protocol extraction, and vulnerability research. Use PROACTIVELY for binary analysis, CTF challenges, security research, or understanding undocumented software. | `reverse-eng` `reverse` |
