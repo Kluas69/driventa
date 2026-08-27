@@ -68,7 +68,7 @@ export const hero = {
   eyebrow: "Truck Dispatch Services",
   title: "Keep Your Trucks Moving. We'll Handle the Dispatch.",
   subtitle:
-    "Driventa is your dedicated dispatch partner — load sourcing, rate negotiation, broker communication, dispatch coordination and admin support, all handled by a dispatcher who knows your business.",
+    "Get more loads, better rates, and less time on the phone. We handle the work so you can focus on driving.",
   highlights: [
     "Dedicated dispatcher",
     "Better-paying loads",

@@ -42,7 +42,7 @@ export const site = {
 
   /** Primary + secondary conversion actions, reused across sections. */
   cta: {
-    primary: { label: "Get Started", href: "#contact" },
+    primary: { label: "Talk to a Dispatcher", href: "#contact" },
     secondary: { label: "See How It Works", href: "#how-it-works" },
     call: { label: "Call Us", href: "tel:+15550182340" },
     apply: { label: "Start My Application", href: "#contact" },

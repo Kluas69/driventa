@@ -34,7 +34,7 @@ export function Header() {
         "fixed inset-x-0 top-0 z-50 transition-[background-color,box-shadow,backdrop-filter] duration-300",
         solid
           ? "border-b border-line bg-paper/85 shadow-[0_1px_0_rgba(10,19,39,0.04),0_10px_30px_-24px_rgba(10,19,39,0.5)] backdrop-blur-xl"
-          : "border-b border-transparent bg-transparent"
+          : "border-b border-white/[0.08] bg-navy-deep/40 backdrop-blur-md lg:border-transparent lg:bg-transparent lg:backdrop-blur-none"
       )}
     >
       <Container>
@@ -51,7 +51,7 @@ export function Header() {
             className="rounded-lg"
             onClick={() => setOpen(false)}
           >
-            <Logo variant={solid ? "default" : "light"} markSize={scrolled ? 34 : 38} />
+            <Logo variant={solid ? "default" : "light"} markSize={scrolled ? 32 : 36} />
           </a>
 
           {/* Desktop nav */}
@@ -101,10 +101,10 @@ export function Header() {
             aria-expanded={open}
             aria-controls="mobile-menu"
             className={cn(
-              "inline-flex h-11 w-11 items-center justify-center rounded-xl border transition-colors lg:hidden",
+              "inline-flex h-11 w-11 items-center justify-center rounded-xl border transition-all duration-200 lg:hidden",
               solid
-                ? "border-line text-navy hover:bg-mist"
-                : "border-white/20 text-white hover:bg-white/10"
+                ? "border-line text-navy hover:bg-mist active:scale-95"
+                : "border-white/20 bg-white/[0.06] text-white backdrop-blur-sm hover:bg-white/10 active:scale-95"
             )}
           >
             <Icon name={open ? "close" : "menu"} size={22} />
