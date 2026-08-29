@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useState, useRef, type FormEvent } from "react";
 import { contact, contactSelects } from "@/lib/content";
 import { site } from "@/lib/site";
 import { Section } from "@/components/ui/section";
@@ -8,8 +8,9 @@ import { Reveal } from "@/components/ui/reveal";
 import { Icon } from "@/components/ui/icon";
 import { cn } from "@/lib/utils";
 import type { IconName } from "@/lib/types";
+import { submitApplication, EQUIPMENT_TYPE_MAP, type EquipmentType } from "@/lib/api";
 
-type Status = "idle" | "submitting" | "success";
+type Status = "idle" | "submitting" | "success" | "error";
 
 interface TextFieldDef {
   name: string;
@@ -41,14 +42,42 @@ const contactRows: { icon: IconName; label: string; value: string; href?: string
 
 export function Contact() {
   const [status, setStatus] = useState<Status>("idle");
+  const [apiError, setApiError] = useState<string>("");
+  const [applicationNumber, setApplicationNumber] = useState<string>("");
+  const formRef = useRef<HTMLFormElement>(null);
 
-  function handleSubmit(e: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (status === "submitting") return;
+    setApiError("");
     setStatus("submitting");
-    // No backend wired up — simulate a submission so the flow is demonstrable.
-    // ⚠️ REPLACE: connect this to your CRM / form endpoint before launch.
-    window.setTimeout(() => setStatus("success"), 900);
+    const data = new FormData(e.currentTarget);
+    try {
+      const result = await submitApplication({
+        fullName: (data.get("name") as string)?.trim() ?? "",
+        email: (data.get("email") as string)?.trim() ?? "",
+        phone: (data.get("phone") as string)?.trim() ?? "",
+        companyName: (data.get("company") as string)?.trim() ?? "",
+        equipmentType: (EQUIPMENT_TYPE_MAP[data.get("equipment") as string] ?? 0) as EquipmentType,
+        truckCount: Number((data.get("trucks") as string)?.replace(/[^0-9]/g, "").trim()) || 1,
+        mcNumber: (data.get("mcdot") as string)?.trim() ?? "",
+        dotNumber: (data.get("mcdot") as string)?.trim() ?? "",
+        preferredLanes: (data.get("lanes") as string)?.trim() ?? "",
+        additionalDetails: (data.get("message") as string)?.trim() ?? "",
+      });
+      if (result.success) {
+        setApplicationNumber(result.data?.applicationNumber ?? "");
+        setStatus("success");
+        formRef.current?.reset();
+      } else {
+        const msg = result.errors?.join(" ") ?? result.message ?? "Submission failed. Please try again.";
+        setApiError(msg);
+        setStatus("error");
+      }
+    } catch {
+      setApiError("Network error. Please check your connection and try again.");
+      setStatus("error");
+    }
   }
 
   return (
@@ -104,11 +133,18 @@ export function Contact() {
         <Reveal delay={100} className="h-full">
           <div className="h-full rounded-3xl border border-line bg-paper p-6 shadow-[var(--shadow-card)] sm:p-8">
             {status === "success" ? (
-              <SuccessState onReset={() => setStatus("idle")} />
+              <SuccessState appNumber={applicationNumber} onReset={() => { setStatus("idle"); setApiError(""); setApplicationNumber(""); }} />
             ) : (
-              <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
+              <form ref={formRef} onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
                 <div className="grid gap-5 sm:grid-cols-2">
-                  {textFields.map((f) => (
+                  {/* API error banner */}
+                {(status === "error") && apiError && (
+                  <div className="sm:col-span-2 flex items-start gap-3 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                    <Icon name="close" size={16} className="mt-0.5 shrink-0 text-red-500" />
+                    <span>{apiError}</span>
+                  </div>
+                )}
+                {textFields.map((f) => (
                     <TextField key={f.name} field={f} />
                   ))}
                   {textFields.length % 2 !== 0 && <div className="hidden sm:block" aria-hidden="true" />}
@@ -250,16 +286,21 @@ function SelectField({
   );
 }
 
-function SuccessState({ onReset }: { onReset: () => void }) {
+function SuccessState({ appNumber, onReset }: { appNumber?: string; onReset: () => void }) {
   return (
     <div className="flex h-full min-h-[24rem] flex-col items-center justify-center text-center">
       <span className="grid h-16 w-16 place-items-center rounded-full bg-positive/10 text-positive">
         <Icon name="check" size={32} strokeWidth={2.5} />
       </span>
-      <h3 className="mt-6 font-display text-2xl font-bold text-ink">Application received</h3>
-      <p className="mt-3 max-w-sm leading-relaxed text-muted">
-        Thanks for reaching out. A Driventa dispatcher will follow up shortly to complete your
-        onboarding and start finding loads.
+      <h3 className="mt-6 font-display text-2xl font-bold text-ink">Application submitted!</h3>
+      {appNumber && (
+        <div className="mt-4 inline-flex flex-col items-center gap-0.5 rounded-xl border border-accent/20 bg-accent/5 px-6 py-3">
+          <span className="text-xs font-medium uppercase tracking-widest text-accent">Application Number</span>
+          <span className="font-mono text-lg font-bold text-accent">{appNumber}</span>
+        </div>
+      )}
+      <p className="mt-4 max-w-sm leading-relaxed text-muted">
+        Thank you! A Driventa dispatcher will review your application and contact you shortly.
       </p>
       <button
         type="button"

@@ -12,7 +12,7 @@ const highlights = [
 
 export function Operations() {
   return (
-    <Section id="operations" tone="mist">
+    <Section id="operations" tone="paper">
       <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
         {/* Copy */}
         <div>

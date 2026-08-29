@@ -29,36 +29,35 @@ import type {
 export const nav: NavItem[] = [
   {
     label: "Services",
-    href: "#services",
+    href: "/services",
     menu: {
       heading: "Dispatch Services",
       tagline: "A full back office for your truck — without the overhead.",
       items: [
-        { label: "Load Finding", description: "Curated freight matched to your lanes and rate goals.", href: "#services", icon: "search" },
-        { label: "Rate Negotiation", description: "We push every load for the rate it's actually worth.", href: "#services", icon: "handshake" },
-        { label: "Broker Communication", description: "We handle the calls, emails and check-ins for you.", href: "#services", icon: "headset" },
-        { label: "Paperwork & Docs", description: "Rate cons, BOLs and setup packets handled end to end.", href: "#services", icon: "document" },
+        { label: "Load Finding", description: "Curated freight matched to your lanes and rate goals.", href: "/services", icon: "search" },
+        { label: "Rate Negotiation", description: "We push every load for the rate it's actually worth.", href: "/services", icon: "handshake" },
+        { label: "Broker Communication", description: "We handle the calls, emails and check-ins for you.", href: "/services", icon: "headset" },
+        { label: "Paperwork & Docs", description: "Rate cons, BOLs and setup packets handled end to end.", href: "/services", icon: "document" },
       ],
     },
   },
   {
     label: "Equipment",
-    href: "#equipment",
+    href: "/equipment",
     menu: {
       heading: "Equipment We Dispatch",
       tagline: "Dedicated dispatch for every trailer type on the road.",
       items: [
-        { label: "Dry Van", description: "Consistent freight and steady lanes.", href: "#equipment", icon: "truck" },
-        { label: "Reefer", description: "Temperature-controlled loads, managed closely.", href: "#equipment", icon: "snowflake" },
-        { label: "Flatbed & Step Deck", description: "Open-deck freight with the right permits.", href: "#equipment", icon: "flatbed" },
-        { label: "Hotshot & Power Only", description: "Fast-moving freight for lighter setups.", href: "#equipment", icon: "power" },
+        { label: "Dry Van", description: "Consistent freight and steady lanes.", href: "/equipment", icon: "truck" },
+        { label: "Reefer", description: "Temperature-controlled loads, managed closely.", href: "/equipment", icon: "snowflake" },
+        { label: "Flatbed & Step Deck", description: "Open-deck freight with the right permits.", href: "/equipment", icon: "flatbed" },
+        { label: "Hotshot & Power Only", description: "Fast-moving freight for lighter setups.", href: "/equipment", icon: "power" },
       ],
     },
   },
-  { label: "How It Works", href: "#how-it-works" },
-  { label: "About", href: "#about" },
-  { label: "Resources", href: "#faq" },
-  { label: "FAQ", href: "#faq" },
+  { label: "Pricing", href: "/pricing" },
+  { label: "About", href: "/about" },
+  { label: "FAQ", href: "/faq" },
 ];
 
 /* ---------------------------------------------------------------------------
@@ -388,37 +387,37 @@ export const footerColumns: FooterColumn[] = [
   {
     heading: "Company",
     links: [
-      { label: "About", href: "#about" },
-      { label: "How It Works", href: "#how-it-works" },
-      { label: "Why Driventa", href: "#why" },
-      { label: "Contact", href: "#contact" },
+      { label: "About Us", href: "/about" },
+      { label: "Pricing", href: "/pricing" },
+      { label: "Apply Now", href: "/apply" },
+      { label: "Contact", href: "/#contact" },
     ],
   },
   {
     heading: "Services",
     links: [
-      { label: "Load Finding", href: "#services" },
-      { label: "Rate Negotiation", href: "#services" },
-      { label: "Broker Communication", href: "#services" },
-      { label: "Paperwork & Docs", href: "#services" },
+      { label: "All Services", href: "/services" },
+      { label: "Load Finding", href: "/services" },
+      { label: "Rate Negotiation", href: "/services" },
+      { label: "Paperwork & Docs", href: "/services" },
     ],
   },
   {
     heading: "Equipment",
     links: [
-      { label: "Dry Van", href: "#equipment" },
-      { label: "Reefer", href: "#equipment" },
-      { label: "Flatbed & Step Deck", href: "#equipment" },
-      { label: "Hotshot & Power Only", href: "#equipment" },
+      { label: "Equipment Guide", href: "/equipment" },
+      { label: "Dry Van", href: "/equipment" },
+      { label: "Reefer", href: "/equipment" },
+      { label: "Flatbed & Step Deck", href: "/equipment" },
     ],
   },
   {
     heading: "Resources",
     links: [
-      { label: "FAQ", href: "#faq" },
-      { label: "How It Works", href: "#how-it-works" },
-      { label: "Pricing", href: "#pricing" },
-      { label: "Get Started", href: "#contact" },
+      { label: "FAQ", href: "/faq" },
+      { label: "Rate Estimator", href: "/pricing" },
+      { label: "Carrier Application", href: "/apply" },
+      { label: "Contact Support", href: "/#contact" },
     ],
   },
 ];

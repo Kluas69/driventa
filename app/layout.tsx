@@ -4,6 +4,7 @@ import { site } from "@/lib/site";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
 import { MobileCtaBar } from "@/components/layout/mobile-cta-bar";
+import { ChatWidget } from "@/components/layout/chat-widget";
 import "./globals.css";
 
 /* Fonts — exposed as CSS variables consumed by the @theme tokens in globals.css.
@@ -116,6 +117,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <main className="flex-1">{children}</main>
         <Footer />
         <MobileCtaBar />
+        <ChatWidget />
       </body>
     </html>
   );

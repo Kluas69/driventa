@@ -2,10 +2,10 @@
 
 /*
   ============================================================================
-  DRIVENTA — Design System (Tailwind v4, CSS-first tokens)
+  DRIVENTA — Design System v2 (Tailwind v4, CSS-first tokens)
   ----------------------------------------------------------------------------
   Aesthetic: premium American logistics technology.
-  Palette:   deep navy + charcoal, clean white / cool gray, electric blue accent.
+  Palette:   deep navy + charcoal, clean white / cool gray, electric blue accent, amber highlight.
   Type:      Plus Jakarta Sans (display) · Inter (body) · JetBrains Mono (data).
   ============================================================================
 */
@@ -16,12 +16,13 @@
   --font-display: var(--font-jakarta), var(--font-inter), ui-sans-serif, system-ui, sans-serif;
   --font-mono: var(--font-jetbrains), ui-monospace, "SF Mono", Menlo, monospace;
 
-  /* ---- Brand: deep navy scale (dark surfaces) --------------------------- */
+  /* ---- Brand: deep navy scale -------------------------------------------- */
   --color-navy-deep: #060c19;
   --color-navy: #0a1327;
   --color-navy-700: #0f1c38;
   --color-navy-600: #16294b;
   --color-navy-500: #1f3a63;
+  --color-navy-400: #2d4f80;
 
   /* ---- Accent: electric / professional blue ----------------------------- */
   --color-accent: #2563eb;
@@ -29,37 +30,53 @@
   --color-accent-soft: #7ea6ff;
   --color-accent-glow: #3b82f6;
   --color-sky: #38bdf8;
+  --color-sky-soft: #7dd3fc;
 
-  /* ---- Industrial amber (used sparingly) -------------------------------- */
+  /* ---- Industrial amber (CTAs, highlights) ------------------------------ */
   --color-amber: #f5a524;
+  --color-amber-deep: #d97706;
+  --color-amber-soft: #fcd34d;
 
   /* ---- Feedback --------------------------------------------------------- */
   --color-positive: #22c55e;
+  --color-positive-soft: #86efac;
 
   /* ---- Neutrals (light surfaces) ---------------------------------------- */
   --color-ink: #0a0f1a;
+  --color-ink-soft: #1e2535;
   --color-paper: #ffffff;
   --color-mist: #f6f8fb;
   --color-mist-200: #eef2f7;
+  --color-mist-300: #e2e8f2;
   --color-line: #e5e9f0;
   --color-line-strong: #d5dbe6;
   --color-muted: #55627a;
+  --color-muted-light: #8896b0;
+
+  /* ---- Glass surfaces --------------------------------------------------- */
+  --color-glass-dark: rgba(6, 12, 25, 0.65);
+  --color-glass-light: rgba(255, 255, 255, 0.07);
 
   /* ---- Radii ------------------------------------------------------------ */
+  --radius-sm: 0.5rem;
   --radius-lg: 0.75rem;
   --radius-xl: 1rem;
   --radius-2xl: 1.375rem;
   --radius-3xl: 1.75rem;
+  --radius-4xl: 2rem;
 
-  /* ---- Elevation (restrained, single soft shadow scale) ----------------- */
+  /* ---- Elevation -------------------------------------------------------- */
   --shadow-soft: 0 1px 2px rgba(10, 19, 39, 0.04), 0 8px 24px -12px rgba(10, 19, 39, 0.14);
   --shadow-card: 0 1px 3px rgba(10, 19, 39, 0.05), 0 18px 40px -22px rgba(10, 19, 39, 0.28);
   --shadow-lift: 0 2px 6px rgba(10, 19, 39, 0.06), 0 30px 60px -28px rgba(10, 19, 39, 0.36);
   --shadow-accent: 0 16px 40px -16px rgba(37, 99, 235, 0.5);
+  --shadow-amber: 0 16px 40px -16px rgba(245, 165, 36, 0.4);
+  --shadow-glow: 0 0 40px rgba(37, 99, 235, 0.15), 0 0 80px rgba(37, 99, 235, 0.05);
 
   /* ---- Motion ----------------------------------------------------------- */
   --ease-out-soft: cubic-bezier(0.22, 0.61, 0.36, 1);
   --ease-out-back: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 /* ==========================================================================
@@ -67,17 +84,24 @@
    ========================================================================== */
 @layer base {
   :root {
-    --header-h: 76px;
+    --header-h: 72px;
     color-scheme: light;
+  }
+
+  @media (min-width: 1024px) {
+    :root {
+      --header-h: 76px;
+    }
   }
 
   * {
     border-color: var(--color-line);
+    box-sizing: border-box;
   }
 
   html {
     scroll-behavior: smooth;
-    scroll-padding-top: calc(var(--header-h) + 16px);
+    scroll-padding-top: calc(var(--header-h) + 20px);
     -webkit-text-size-adjust: 100%;
     text-rendering: optimizeLegibility;
   }
@@ -90,33 +114,43 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
+    min-height: 100dvh;
   }
 
-  h1, h2, h3, h4, h5 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
     font-family: var(--font-display);
     font-weight: 700;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.025em;
     text-wrap: balance;
   }
 
-  p { text-wrap: pretty; }
+  p {
+    text-wrap: pretty;
+  }
 
   ::selection {
-    background: color-mix(in oklab, var(--color-accent) 24%, transparent);
+    background: color-mix(in oklab, var(--color-accent) 22%, transparent);
     color: var(--color-ink);
   }
 
-  /* Visible, on-brand keyboard focus everywhere */
   :focus-visible {
-    outline: 3px solid var(--color-accent);
-    outline-offset: 2px;
-    border-radius: 4px;
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+    border-radius: 6px;
   }
 
-  /* Reduce motion for those who ask for it */
   @media (prefers-reduced-motion: reduce) {
-    html { scroll-behavior: auto; }
-    *, *::before, *::after {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
       animation-duration: 0.01ms !important;
       animation-iteration-count: 1 !important;
       transition-duration: 0.01ms !important;
@@ -126,24 +160,30 @@
 
 /* ==========================================================================
    Scroll-reveal
-   Content is visible by default (no-JS / SEO safe). The `.js` class — added
-   by an inline script before paint — opts in to the animated entrance.
    ========================================================================== */
 .js .reveal {
   opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.7s var(--ease-out-soft), transform 0.7s var(--ease-out-soft);
+  transform: translateY(28px) scale(0.985);
+  filter: blur(3px);
+  transition:
+    opacity 0.75s var(--ease-out-soft),
+    transform 0.75s var(--ease-out-soft),
+    filter 0.75s var(--ease-out-soft);
   transition-delay: var(--reveal-delay, 0ms);
-  will-change: opacity, transform;
+  will-change: opacity, transform, filter;
 }
+
 .js .reveal.is-visible {
   opacity: 1;
   transform: none;
+  filter: blur(0);
 }
+
 @media (prefers-reduced-motion: reduce) {
   .js .reveal {
     opacity: 1 !important;
     transform: none !important;
+    filter: none !important;
     transition: none !important;
   }
 }
@@ -152,105 +192,638 @@
    Utilities & decorative backgrounds
    ========================================================================== */
 @layer utilities {
-  /* Consistent page gutter + max content width (~1200 content / 1280 wide) */
+
+  /* Consistent page gutter + max content width */
   .container-page {
     width: 100%;
     max-width: 1280px;
     margin-inline: auto;
     padding-inline: 1.25rem;
   }
-  @media (min-width: 768px) {
-    .container-page { padding-inline: 2rem; }
+
+  @media (min-width: 640px) {
+    .container-page {
+      padding-inline: 1.5rem;
+    }
   }
+
+  @media (min-width: 768px) {
+    .container-page {
+      padding-inline: 2rem;
+    }
+  }
+
   @media (min-width: 1280px) {
-    .container-page { padding-inline: 2.5rem; }
+    .container-page {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  /* Page hero padding — consistent across all inner pages */
+  .page-hero {
+    padding-top: calc(var(--header-h) + 3rem);
+    padding-bottom: 4rem;
+  }
+
+  @media (min-width: 768px) {
+    .page-hero {
+      padding-top: calc(var(--header-h) + 4rem);
+      padding-bottom: 5rem;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .page-hero {
+      padding-top: calc(var(--header-h) + 5rem);
+      padding-bottom: 6rem;
+    }
   }
 
   /* Uppercase mono kicker/eyebrow label */
   .kicker {
     font-family: var(--font-mono);
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     font-weight: 500;
     letter-spacing: 0.18em;
     text-transform: uppercase;
   }
 
   /* Tabular figures for metrics / data */
-  .tnum { font-variant-numeric: tabular-nums; font-feature-settings: "tnum"; }
+  .tnum {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
 
-  /* Engineered grid line background (dark sections) */
+  /* Grid line backgrounds */
   .bg-grid-dark {
     background-image:
-      linear-gradient(to right, rgba(126, 166, 255, 0.07) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(126, 166, 255, 0.07) 1px, transparent 1px);
-    background-size: 56px 56px;
+      linear-gradient(to right, rgba(126, 166, 255, 0.065) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(126, 166, 255, 0.065) 1px, transparent 1px);
+    background-size: 60px 60px;
   }
-  /* Subtle grid for light sections */
+
   .bg-grid-light {
     background-image:
-      linear-gradient(to right, rgba(10, 19, 39, 0.04) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(10, 19, 39, 0.04) 1px, transparent 1px);
-    background-size: 48px 48px;
+      linear-gradient(to right, rgba(10, 19, 39, 0.038) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(10, 19, 39, 0.038) 1px, transparent 1px);
+    background-size: 52px 52px;
+  }
+
+  /* Dot pattern overlay */
+  .bg-dots {
+    background-image: radial-gradient(rgba(126, 166, 255, 0.12) 1px, transparent 1px);
+    background-size: 28px 28px;
   }
 
   /* Radial spotlight glow */
   .glow-accent {
-    background: radial-gradient(closest-side, rgba(59, 130, 246, 0.55), rgba(59, 130, 246, 0) 100%);
+    background: radial-gradient(closest-side, rgba(59, 130, 246, 0.5), rgba(59, 130, 246, 0) 100%);
   }
 
-  /* Faint mask that fades an element toward its edges */
+  .glow-amber {
+    background: radial-gradient(closest-side, rgba(245, 165, 36, 0.35), rgba(245, 165, 36, 0) 100%);
+  }
+
+  .glow-sky {
+    background: radial-gradient(closest-side, rgba(56, 189, 248, 0.3), rgba(56, 189, 248, 0) 100%);
+  }
+
+  /* Fade masks */
   .mask-fade-b {
     -webkit-mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
     mask-image: linear-gradient(to bottom, #000 60%, transparent 100%);
   }
+
+  .mask-fade-sides {
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 15%, #000 85%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 15%, #000 85%, transparent);
+  }
+
+  /* Gradient text utility */
+  .text-gradient-blue {
+    background: linear-gradient(135deg, var(--color-accent-soft), var(--color-sky));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .text-gradient-amber {
+    background: linear-gradient(135deg, var(--color-amber), var(--color-amber-soft));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Glass card */
+  .glass-dark {
+    background: rgba(6, 12, 25, 0.6);
+    backdrop-filter: blur(20px) saturate(1.4);
+    -webkit-backdrop-filter: blur(20px) saturate(1.4);
+    border: 1px solid rgba(126, 166, 255, 0.12);
+  }
+
+  .glass-light {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(16px) saturate(1.3);
+    -webkit-backdrop-filter: blur(16px) saturate(1.3);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+  }
 }
 
-/* Marquee for the trust/logo row — pauses on hover & reduced-motion */
-@keyframes driventa-marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+/* ==========================================================================
+   Section dividers
+   ========================================================================== */
+.section-divider-down {
+  position: relative;
 }
+
+.section-divider-down::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: -1px;
+  height: 100px;
+  background: linear-gradient(to bottom, transparent, var(--color-paper));
+  pointer-events: none;
+}
+
+.section-divider-dark::after {
+  background: linear-gradient(to bottom, transparent, var(--color-navy-deep));
+}
+
+/* ==========================================================================
+   Text shimmer animation
+   ========================================================================== */
+@keyframes driventa-shimmer {
+  0% {
+    background-position: -200% center;
+  }
+
+  100% {
+    background-position: 200% center;
+  }
+}
+
+.text-shimmer {
+  background: linear-gradient(110deg,
+      var(--color-accent-soft) 0%,
+      var(--color-sky) 25%,
+      var(--color-paper) 50%,
+      var(--color-sky) 75%,
+      var(--color-accent-soft) 100%);
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: driventa-shimmer 5s ease-in-out infinite;
+}
+
+/* ==========================================================================
+   Card glow border
+   ========================================================================== */
+@keyframes driventa-border-glow {
+
+  0%,
+  100% {
+    opacity: 0.35;
+  }
+
+  50% {
+    opacity: 0.75;
+  }
+}
+
+.card-glow {
+  position: relative;
+}
+
+.card-glow::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  background: linear-gradient(135deg, var(--color-accent), var(--color-sky), var(--color-accent));
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.card-glow:hover::before {
+  opacity: 0.5;
+  animation: driventa-border-glow 2s ease-in-out infinite;
+}
+
+/* ==========================================================================
+   Marquee
+   ========================================================================== */
+@keyframes driventa-marquee {
+  from {
+    transform: translateX(0);
+  }
+
+  to {
+    transform: translateX(-50%);
+  }
+}
+
 .marquee-track {
   display: flex;
   width: max-content;
-  animation: driventa-marquee 34s linear infinite;
-}
-.marquee:hover .marquee-track { animation-play-state: paused; }
-@media (prefers-reduced-motion: reduce) {
-  .marquee-track { animation: none; }
+  animation: driventa-marquee 30s linear infinite;
 }
 
-/* Live "operational" status pulse */
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-track {
+    animation: none;
+  }
+}
+
+/* ==========================================================================
+   Status pulse
+   ========================================================================== */
 @keyframes driventa-pulse {
-  0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.55); }
-  70% { box-shadow: 0 0 0 7px rgba(34, 197, 94, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
-}
-.pulse-dot { animation: driventa-pulse 2.2s ease-out infinite; }
+  0% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.6);
+  }
 
-/* Dashed route line "flow" animation for the hero/operations visuals */
+  70% {
+    box-shadow: 0 0 0 8px rgba(34, 197, 94, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
+  }
+}
+
+.pulse-dot {
+  animation: driventa-pulse 2.4s ease-out infinite;
+}
+
+@keyframes driventa-pulse-blue {
+  0% {
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0.5);
+  }
+
+  70% {
+    box-shadow: 0 0 0 8px rgba(37, 99, 235, 0);
+  }
+
+  100% {
+    box-shadow: 0 0 0 0 rgba(37, 99, 235, 0);
+  }
+}
+
+.pulse-dot-blue {
+  animation: driventa-pulse-blue 2.4s ease-out infinite;
+}
+
+/* ==========================================================================
+   Route flow (SVG stroke animation)
+   ========================================================================== */
 @keyframes driventa-dash {
-  to { stroke-dashoffset: -1000; }
+  to {
+    stroke-dashoffset: -1000;
+  }
 }
-.route-flow { animation: driventa-dash 24s linear infinite; }
 
-/* Gentle float for the hero's floating dispatch chips */
-@keyframes driventa-float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-9px); }
+.route-flow {
+  animation: driventa-dash 24s linear infinite;
 }
-.float-slow { animation: driventa-float 6s ease-in-out infinite; }
-.float-slower { animation: driventa-float 8.5s ease-in-out infinite; }
+
+/* ==========================================================================
+   Floating elements
+   ========================================================================== */
+@keyframes driventa-float {
+
+  0%,
+  100% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes driventa-float-x {
+
+  0%,
+  100% {
+    transform: translate(0px, 0px);
+  }
+
+  33% {
+    transform: translate(8px, -6px);
+  }
+
+  66% {
+    transform: translate(-4px, -12px);
+  }
+}
+
+.float-slow {
+  animation: driventa-float 6.5s ease-in-out infinite;
+}
+
+.float-slower {
+  animation: driventa-float 9s ease-in-out infinite;
+}
+
+.float-x {
+  animation: driventa-float-x 8s ease-in-out infinite;
+}
+
+/* ==========================================================================
+   Ambient orb drift
+   ========================================================================== */
+@keyframes driventa-orb-drift {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+
+  25% {
+    transform: translate(35px, -25px) scale(1.06);
+  }
+
+  50% {
+    transform: translate(-12px, -45px) scale(0.94);
+  }
+
+  75% {
+    transform: translate(-35px, -12px) scale(1.04);
+  }
+
+  100% {
+    transform: translate(0, 0) scale(1);
+  }
+}
+
+.orb-drift {
+  animation: driventa-orb-drift 22s ease-in-out infinite;
+  will-change: transform;
+}
+
+.orb-drift-slow {
+  animation: driventa-orb-drift 32s ease-in-out infinite;
+  animation-direction: reverse;
+}
 
 @media (prefers-reduced-motion: reduce) {
-  .pulse-dot, .route-flow, .float-slow, .float-slower { animation: none; }
+
+  .pulse-dot,
+  .pulse-dot-blue,
+  .route-flow,
+  .float-slow,
+  .float-slower,
+  .float-x,
+  .text-shimmer,
+  .orb-drift,
+  .orb-drift-slow,
+  .marquee-track {
+    animation: none;
+  }
+
+  .text-shimmer {
+    background: var(--color-accent-soft);
+    -webkit-text-fill-color: var(--color-accent-soft);
+  }
 }
 
-/* Smooth, measurement-free accordion using grid rows (0fr -> 1fr) */
+/* ==========================================================================
+   Accordion (CSS grid rows 0fr → 1fr)
+   ========================================================================== */
 .accordion-panel {
   display: grid;
   grid-template-rows: 0fr;
-  transition: grid-template-rows 0.35s var(--ease-out-soft);
+  transition: grid-template-rows 0.38s var(--ease-out-soft);
 }
-.accordion-panel[data-open="true"] { grid-template-rows: 1fr; }
-.accordion-panel > .accordion-inner { overflow: hidden; }
+
+.accordion-panel[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+
+.accordion-panel>.accordion-inner {
+  overflow: hidden;
+}
+
+/* ==========================================================================
+   Step connector line (How It Works)
+   ========================================================================== */
+.step-connector {
+  position: relative;
+}
+
+.step-connector:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 2.25rem;
+  left: 1.125rem;
+  width: 2px;
+  bottom: -1rem;
+  background: linear-gradient(to bottom, var(--color-accent), transparent);
+  opacity: 0.3;
+}
+
+/* ==========================================================================
+   Stat counter number (premium mono display)
+   ========================================================================== */
+.stat-value {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+  letter-spacing: -0.04em;
+}
+
+/* ==========================================================================
+   Range slider (pricing calculator)
+   ========================================================================== */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--color-mist-200);
+  outline: none;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.45);
+  border: 3px solid white;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.18);
+  box-shadow: 0 4px 18px rgba(37, 99, 235, 0.6);
+}
+
+input[type="range"]::-moz-range-thumb {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(37, 99, 235, 0.4);
+  border: 3px solid white;
+}
+
+/* ==========================================================================
+   Number count-up animation
+   ========================================================================== */
+@keyframes driventa-count-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.count-in {
+  animation: driventa-count-in 0.5s var(--ease-out-soft) forwards;
+}
+
+/* ==========================================================================
+   Mobile nav drawer overlay
+   ========================================================================== */
+.nav-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(6, 12, 25, 0.6);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  z-index: 48;
+  transition: opacity 0.3s ease;
+}
+
+/* ==========================================================================
+   Hover card lift effect
+   ========================================================================== */
+.card-lift {
+  transition: transform 0.25s var(--ease-out-soft), box-shadow 0.25s var(--ease-out-soft);
+}
+
+.card-lift:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lift);
+}
+
+/* ==========================================================================
+   Badge / pill utility
+   ========================================================================== */
+.badge-accent {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.3125rem 0.75rem;
+  border-radius: 9999px;
+  background: rgba(37, 99, 235, 0.1);
+  border: 1px solid rgba(37, 99, 235, 0.25);
+  color: var(--color-accent-strong);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+}
+
+.badge-amber {
+  background: rgba(245, 165, 36, 0.1);
+  border: 1px solid rgba(245, 165, 36, 0.3);
+  color: var(--color-amber-deep);
+}
+
+.badge-positive {
+  background: rgba(34, 197, 94, 0.1);
+  border: 1px solid rgba(34, 197, 94, 0.25);
+  color: #15803d;
+}
+
+/* ==========================================================================
+   Progress bar (multi-step form)
+   ========================================================================== */
+.progress-bar {
+  height: 3px;
+  background: var(--color-mist-200);
+  border-radius: 9999px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(to right, var(--color-accent), var(--color-sky));
+  border-radius: 9999px;
+  transition: width 0.4s var(--ease-out-soft);
+}
+
+/* ==========================================================================
+   Bento grid helpers
+   ========================================================================== */
+.bento-featured {
+  grid-column: span 2;
+  grid-row: span 2;
+}
+
+@media (max-width: 767px) {
+  .bento-featured {
+    grid-column: span 1;
+    grid-row: span 1;
+  }
+}
+
+/* ==========================================================================
+   Skeleton loader (for future lazy-load states)
+   ========================================================================== */
+@keyframes driventa-skeleton {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(90deg,
+      var(--color-mist-200) 25%,
+      var(--color-mist) 50%,
+      var(--color-mist-200) 75%);
+  background-size: 200% 100%;
+  animation: driventa-skeleton 1.8s ease-in-out infinite;
+  border-radius: var(--radius-lg);
+}
+
+/* ==========================================================================
+   Scrollbar (Webkit) — thin, branded
+   ========================================================================== */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-line-strong);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-muted-light);
+}

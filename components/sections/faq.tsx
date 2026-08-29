@@ -16,7 +16,7 @@ export function Faq() {
       <SectionHeading
         eyebrow="FAQ"
         title="Questions, Answered"
-        description="Everything you need to know about working with Driventa. Still curious? Reach out and we'll walk you through it."
+        description="Everything you need to know about working with Driventa. Still curious? Reach out and our dispatchers will walk you through it."
       />
 
       <div className="mx-auto mt-14 max-w-3xl space-y-3">
@@ -29,8 +29,8 @@ export function Faq() {
             <Reveal key={i} delay={i * 50}>
               <div
                 className={cn(
-                  "overflow-hidden rounded-2xl border bg-paper transition-colors duration-200",
-                  isOpen ? "border-accent/40 shadow-soft" : "border-line"
+                  "overflow-hidden rounded-2xl border bg-paper transition-all duration-200",
+                  isOpen ? "border-accent/40 shadow-card" : "border-line hover:border-line-strong"
                 )}
               >
                 <h3>
@@ -68,6 +68,16 @@ export function Faq() {
           );
         })}
       </div>
+
+      <Reveal delay={120} className="mt-10 text-center">
+        <a
+          href="/faq"
+          className="inline-flex items-center gap-2 text-sm font-semibold text-accent-strong transition-colors hover:text-accent"
+        >
+          View Full Searchable FAQ Knowledgebase
+          <Icon name="arrow-right" size={16} />
+        </a>
+      </Reveal>
     </Section>
   );
 }

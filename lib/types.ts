@@ -47,7 +47,9 @@ export type IconName =
   | "linkedin"
   | "facebook"
   | "instagram"
-  | "x-social";
+  | "x-social"
+  | "sun"
+  | "moon";
 
 export interface NavLink {
   label: string;
