@@ -28,7 +28,7 @@ export const site = {
     display: "(555) 018-2340",
     href: "tel:+15550182340",
   },
-  email: "dispatch@driventa.com",
+  email: "info@driventa.com",
   supportHours: "24/7 dispatch support",
   areaServed: "United States",
 
