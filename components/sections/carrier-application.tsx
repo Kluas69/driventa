@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useId, useMemo, useRef, useEffect, useCallback, type FormEvent, type ChangeEvent } from "react";
+import Link from "next/link";
 import { Section } from "@/components/ui/section";
 import { Icon } from "@/components/ui/icon";
 import { cn } from "@/lib/utils";
@@ -588,13 +589,13 @@ function LaneSelectField({
   const containerRef = useRef<HTMLDivElement>(null);
 
   const filtered = useMemo(() => {
-    if (!query.trim()) return [];
-    const q = query.toLowerCase();
-    return ALL_ROUTES.filter((route) => route.toLowerCase().includes(q)).slice(
-      0,
-      50
-    );
-  }, [query]);
+    const q = query.trim().toLowerCase();
+    const candidates = q
+      ? ALL_ROUTES.filter((route) => route.toLowerCase().includes(q))
+      : ALL_ROUTES;
+
+    return candidates.filter((route) => !value.includes(route)).slice(0, 24);
+  }, [query, value]);
 
   const selectRoute = useCallback(
     (route: string) => {
@@ -629,10 +630,6 @@ function LaneSelectField({
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
-  useEffect(() => {
-    setActiveIndex(-1);
-  }, [query]);
 
   function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
     if (!isOpen) {
@@ -685,7 +682,7 @@ function LaneSelectField({
       <div ref={containerRef} className="relative">
         <div
           className={cn(
-            "flex min-h-[46px] w-full flex-wrap items-center gap-1.5 rounded-xl border bg-mist/40 px-3 py-2 text-sm text-ink transition-colors focus-within:bg-paper focus-within:outline-none focus-within:ring-4",
+            "flex min-h-[46px] w-full flex-wrap items-center gap-1.5 rounded-2xl border bg-white px-2.5 py-2 text-sm text-ink shadow-[0_1px_0_rgba(15,23,42,0.02)] transition-all duration-200 focus-within:bg-white focus-within:outline-none focus-within:ring-4",
             error
               ? "border-red-400 focus-within:border-red-400 focus-within:ring-red-200/50"
               : "border-line-strong focus-within:border-accent focus-within:ring-accent/15"
@@ -695,9 +692,9 @@ function LaneSelectField({
           {value.map((route) => (
             <span
               key={route}
-              className="inline-flex items-center gap-1 rounded-lg bg-accent/10 px-2.5 py-1 text-xs font-medium text-accent-strong"
+              className="inline-flex items-center gap-1 rounded-full border border-accent/20 bg-accent/8 px-2.5 py-1 text-[11px] font-semibold tracking-[0.01em] text-accent-strong"
             >
-              <Icon name="route" size={12} className="shrink-0" />
+              <Icon name="route" size={11} className="shrink-0" />
               {route}
               <button
                 type="button"
@@ -705,18 +702,18 @@ function LaneSelectField({
                   e.stopPropagation();
                   removeRoute(route);
                 }}
-                className="ml-0.5 rounded-full p-0.5 transition-colors hover:bg-accent/20"
+                className="ml-0.5 rounded-full p-0.5 transition-colors hover:bg-accent/10"
                 aria-label={`Remove ${route}`}
               >
-                <Icon name="close" size={10} />
+                <Icon name="close" size={9} />
               </button>
             </span>
           ))}
-          <div className="relative flex flex-1 items-center">
+          <div className="relative flex flex-1 items-center min-w-[120px]">
             <Icon
               name="search"
               size={15}
-              className="pointer-events-none absolute left-1 shrink-0 text-muted/60"
+              className="pointer-events-none absolute left-2 shrink-0 text-muted/60"
             />
             <input
               ref={inputRef}
@@ -732,33 +729,35 @@ function LaneSelectField({
               value={query}
               onChange={(e) => {
                 setQuery(e.target.value);
+                setActiveIndex(-1);
                 if (!isOpen) setIsOpen(true);
               }}
               onFocus={() => {
-                if (query.trim()) setIsOpen(true);
+                setIsOpen(true);
+                setActiveIndex(-1);
               }}
               onKeyDown={handleKeyDown}
               placeholder={
                 value.length === 0
-                  ? "Search origin or destination state…"
+                  ? "Search states or routes…"
                   : "Add more lanes…"
               }
-              className="w-full bg-transparent py-1 pl-6 pr-2 text-sm text-ink placeholder:text-muted/60 focus:outline-none"
+              className="w-full bg-transparent py-1.5 pl-7 pr-2 text-sm text-ink placeholder:text-muted/60 focus:outline-none"
             />
           </div>
         </div>
 
-        {isOpen && query.trim() && (
+        {isOpen && (
           <ul
             ref={listRef}
             id={`${id}-listbox`}
             role="listbox"
             aria-label="Available routes"
-            className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-xl border border-line-strong bg-paper py-1 shadow-[var(--shadow-card)]"
+            className="absolute z-50 mt-2 max-h-64 w-full overflow-y-auto rounded-2xl border border-line-strong bg-white p-1.5 shadow-[0_18px_40px_rgba(15,23,42,0.14)]"
           >
             {filtered.length === 0 ? (
-              <li className="px-4 py-3 text-sm text-muted">
-                No routes match &ldquo;{query}&rdquo;
+              <li className="px-3 py-3 text-sm text-muted">
+                No routes match &ldquo;{query || "your search"}&rdquo;
               </li>
             ) : (
               filtered.map((route, i) => {
@@ -775,15 +774,15 @@ function LaneSelectField({
                     }}
                     onMouseEnter={() => setActiveIndex(i)}
                     className={cn(
-                      "flex cursor-pointer items-center gap-2 px-4 py-2.5 text-sm transition-colors",
+                      "flex cursor-pointer items-center gap-2 rounded-xl px-3 py-2 text-sm transition-colors",
                       i === activeIndex && "bg-accent/5 text-accent-strong",
                       isSelected && "text-muted line-through opacity-50"
                     )}
                   >
-                    <Icon name="route" size={14} className="shrink-0 text-muted/50" />
+                    <Icon name="route" size={13} className="shrink-0 text-muted/50" />
                     <span className="flex-1">{route}</span>
                     {isSelected && (
-                      <Icon name="check" size={14} className="shrink-0 text-accent" />
+                      <Icon name="check" size={13} className="shrink-0 text-accent" />
                     )}
                   </li>
                 );
@@ -851,12 +850,12 @@ function SuccessState({
           >
             Submit Another Application
           </button>
-          <a
+          <Link
             href="/"
             className="inline-flex h-11 items-center gap-2 rounded-xl border border-line-strong px-6 text-sm font-medium text-ink transition-colors hover:border-accent/40 hover:bg-accent/5 hover:text-accent-strong"
           >
             Return Home
-          </a>
+          </Link>
         </div>
       </div>
     </div>
