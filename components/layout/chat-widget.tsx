@@ -42,6 +42,10 @@ export function ChatWidget() {
   const [preChatErrors, setPreChatErrors] = useState<Partial<PreChatForm>>({});
   const [chatOptions, setChatOptions] = useState<UseChatOptions | null>(null);
   const [inputText, setInputText] = useState("");
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [lastUnreadMessage, setLastUnreadMessage] = useState("");
+
+  const prevMessagesLengthRef = useRef(0);
 
   const { status, messages, conversationId, sendMessage, reconnect, disconnect, error } =
     useDriventaChat(chatOptions);
@@ -62,7 +66,27 @@ export function ChatWidget() {
     }
   }, [status, view]);
 
-  function openWidget() { setView("pre-chat"); }
+  /* track unread messages */
+  useEffect(() => {
+    if (messages.length > prevMessagesLengthRef.current) {
+      const newMessages = messages.slice(prevMessagesLengthRef.current);
+      if (view === "closed") {
+        const agentMessages = newMessages.filter(m => m.senderType === "agent" || m.senderType === "system");
+        if (agentMessages.length > 0) {
+          setUnreadCount(prev => prev + agentMessages.length);
+          setLastUnreadMessage(agentMessages[agentMessages.length - 1].text);
+          // Play a subtle sound (optional, assuming we had one, but we'll just show the popup)
+        }
+      }
+    }
+    prevMessagesLengthRef.current = messages.length;
+  }, [messages, view]);
+
+  function openWidget() {
+    setView("pre-chat");
+    setUnreadCount(0);
+    setLastUnreadMessage("");
+  }
   function closeWidget() { setView("closed"); }
 
   function handlePreChatChange(e: ChangeEvent<HTMLInputElement>) {
@@ -128,10 +152,56 @@ export function ChatWidget() {
         >
           <Icon name="headset" size={26} />
           <span className="absolute inset-0 animate-ping rounded-full bg-accent/30" />
-          <span className="absolute -top-10 right-0 whitespace-nowrap rounded-lg bg-navy px-3 py-1.5 text-xs font-medium text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
-            Chat with us
-          </span>
+          {unreadCount > 0 && (
+            <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full border-2 border-white bg-red-500 px-1 text-[10px] font-bold text-white shadow-sm">
+              {unreadCount}
+            </span>
+          )}
+          {view === "closed" && unreadCount === 0 && (
+            <span className="absolute -top-10 right-0 whitespace-nowrap rounded-lg bg-navy px-3 py-1.5 text-xs font-medium text-white opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
+              Chat with us
+            </span>
+          )}
         </button>
+
+        {/* Unread Message Popup Toast */}
+        <div
+          className={cn(
+            "absolute bottom-20 right-0 w-[280px] origin-bottom-right rounded-xl bg-white p-3 shadow-xl transition-all duration-300 sm:w-[320px]",
+            view === "closed" && unreadCount > 0
+              ? "scale-100 opacity-100 translate-y-0"
+              : "pointer-events-none scale-95 opacity-0 translate-y-4"
+          )}
+        >
+          <div className="flex items-start gap-3">
+            <div className="mt-0.5 grid h-8 w-8 shrink-0 place-items-center rounded-full bg-accent text-white shadow-sm">
+              <Icon name="headset" size={16} />
+            </div>
+            <div className="flex-1">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-semibold text-ink">New Message</p>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setUnreadCount(0);
+                  }}
+                  className="p-1 text-muted hover:text-ink"
+                >
+                  <Icon name="close" size={14} />
+                </button>
+              </div>
+              <p className="mt-1 line-clamp-2 text-sm text-muted">
+                {lastUnreadMessage || "You have a new message"}
+              </p>
+              <button
+                onClick={openWidget}
+                className="mt-2 text-xs font-semibold text-accent hover:underline"
+              >
+                Reply now
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Widget panel */}

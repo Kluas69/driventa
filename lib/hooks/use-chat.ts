@@ -459,7 +459,7 @@ export function useDriventaChat(options: UseChatOptions | null): UseChatReturn {
         await fetch(`${(await import("@/lib/api")).BASE_URL}/api/public/chat/send`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ conversationId: convId, message: text }),
+          body: JSON.stringify({ conversationId: convId, message: text, content: text }),
         });
       } catch { /* polling will confirm */ }
     }
