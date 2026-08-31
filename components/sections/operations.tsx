@@ -50,7 +50,7 @@ export function Operations() {
         </div>
 
         {/* Panel */}
-        <Reveal delay={140} className="relative">
+        <Reveal delay={140} className="relative overflow-hidden">
           <div className="glow-accent pointer-events-none absolute inset-0 scale-110 opacity-30" aria-hidden="true" />
           <div className="relative">
             <DispatchPanel />

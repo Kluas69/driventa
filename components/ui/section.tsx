@@ -35,7 +35,7 @@ export function Section({
     <section
       id={id}
       className={cn(
-        "relative scroll-mt-24 py-20 md:py-28",
+        "relative scroll-mt-24 overflow-hidden py-20 md:py-28",
         toneClasses[tone],
         className
       )}

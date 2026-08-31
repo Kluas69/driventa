@@ -84,7 +84,7 @@ export function Contact() {
     <Section id="contact" tone="paper">
       <div className="grid gap-8 lg:grid-cols-[0.82fr_1.18fr] lg:gap-10">
         {/* Info panel */}
-        <Reveal className="h-full">
+        <Reveal className="h-full overflow-hidden">
           <div className="relative flex h-full flex-col overflow-hidden rounded-3xl bg-navy-deep p-8 text-white sm:p-10">
             <div aria-hidden="true" className="pointer-events-none absolute inset-0">
               <div className="bg-grid-dark absolute inset-0 opacity-40" />
@@ -130,7 +130,7 @@ export function Contact() {
         </Reveal>
 
         {/* Form */}
-        <Reveal delay={100} className="h-full">
+        <Reveal delay={100} className="h-full overflow-hidden">
           <div className="h-full rounded-3xl border border-line bg-paper p-6 shadow-[var(--shadow-card)] sm:p-8">
             {status === "success" ? (
               <SuccessState appNumber={applicationNumber} onReset={() => { setStatus("idle"); setApiError(""); setApplicationNumber(""); }} />
