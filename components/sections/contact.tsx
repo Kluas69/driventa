@@ -9,6 +9,7 @@ import { Icon } from "@/components/ui/icon";
 import { cn } from "@/lib/utils";
 import type { IconName } from "@/lib/types";
 import { submitApplication, EQUIPMENT_TYPE_MAP, type EquipmentType } from "@/lib/api";
+import { LaneSelectField } from "@/components/ui/lane-select";
 
 type Status = "idle" | "submitting" | "success" | "error";
 
@@ -31,7 +32,6 @@ const textFields: TextFieldDef[] = [
 
 const secondaryFields: TextFieldDef[] = [
   { name: "mcdot", label: "MC / DOT number", type: "text", placeholder: "Optional" },
-  { name: "lanes", label: "Preferred lanes", type: "text", placeholder: "e.g. TX ↔ Southeast", wide: true },
 ];
 
 const contactRows: { icon: IconName; label: string; value: string; href?: string }[] = [
@@ -44,6 +44,7 @@ export function Contact() {
   const [status, setStatus] = useState<Status>("idle");
   const [apiError, setApiError] = useState<string>("");
   const [applicationNumber, setApplicationNumber] = useState<string>("");
+  const [lanes, setLanes] = useState<string[]>([]);
   const formRef = useRef<HTMLFormElement>(null);
 
   async function handleSubmit(e: FormEvent<HTMLFormElement>) {
@@ -69,6 +70,7 @@ export function Contact() {
         setApplicationNumber(result.data?.applicationNumber ?? "");
         setStatus("success");
         formRef.current?.reset();
+        setLanes([]);
       } else {
         const msg = result.errors?.join(" ") ?? result.message ?? "Submission failed. Please try again.";
         setApiError(msg);
@@ -133,7 +135,7 @@ export function Contact() {
         <Reveal delay={100} className="h-full overflow-hidden">
           <div className="h-full rounded-3xl border border-line bg-paper p-6 shadow-[var(--shadow-card)] sm:p-8">
             {status === "success" ? (
-              <SuccessState appNumber={applicationNumber} onReset={() => { setStatus("idle"); setApiError(""); setApplicationNumber(""); }} />
+              <SuccessState appNumber={applicationNumber} onReset={() => { setStatus("idle"); setApiError(""); setApplicationNumber(""); setLanes([]); }} />
             ) : (
               <form ref={formRef} onSubmit={handleSubmit} noValidate className="flex flex-col gap-5">
                 <div className="grid gap-5 sm:grid-cols-2">
@@ -158,6 +160,14 @@ export function Contact() {
                   {secondaryFields.map((f) => (
                     <TextField key={f.name} field={f} />
                   ))}
+
+                  <LaneSelectField
+                    name="lanes"
+                    label="Preferred lanes"
+                    value={lanes}
+                    onChange={setLanes}
+                    wide
+                  />
 
                   <div className="sm:col-span-2">
                     <label htmlFor="message" className="mb-1.5 block text-sm font-medium text-navy">
