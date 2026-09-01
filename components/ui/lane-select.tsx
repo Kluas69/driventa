@@ -3,24 +3,7 @@
 import { useState, useMemo, useRef, useEffect, useCallback, useId } from "react";
 import { Icon } from "@/components/ui/icon";
 import { cn } from "@/lib/utils";
-
-const CONTIGUOUS_STATES = [
-  "Alabama", "Arizona", "Arkansas", "California", "Colorado", "Connecticut",
-  "Delaware", "Florida", "Georgia", "Idaho", "Illinois", "Indiana", "Iowa",
-  "Kansas", "Kentucky", "Louisiana", "Maine", "Maryland", "Massachusetts",
-  "Michigan", "Minnesota", "Mississippi", "Missouri", "Montana", "Nebraska",
-  "Nevada", "New Hampshire", "New Jersey", "New Mexico", "New York",
-  "North Carolina", "North Dakota", "Ohio", "Oklahoma", "Oregon",
-  "Pennsylvania", "Rhode Island", "South Carolina", "South Dakota",
-  "Tennessee", "Texas", "Utah", "Vermont", "Virginia", "Washington",
-  "West Virginia", "Wisconsin", "Wyoming",
-] as const;
-
-export const ALL_ROUTES: string[] = CONTIGUOUS_STATES.flatMap((origin) =>
-  CONTIGUOUS_STATES.filter((dest) => dest !== origin).map(
-    (dest) => `${origin} → ${dest}`
-  )
-);
+import { loadLanes, type Lane } from "@/lib/lane-data";
 
 export function LaneSelectField({
   label,
@@ -43,31 +26,62 @@ export function LaneSelectField({
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [activeIndex, setActiveIndex] = useState(-1);
+  const [allLanes, setAllLanes] = useState<Lane[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loadError, setLoadError] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    loadLanes().then((lanes) => {
+      if (lanes.length === 0) {
+        setLoadError(true);
+      } else {
+        setAllLanes(lanes);
+      }
+      setLoading(false);
+    });
+  }, []);
+
+  const selectedSet = useMemo(() => new Set(value), [value]);
+
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    const candidates = q
-      ? ALL_ROUTES.filter((route) => route.toLowerCase().includes(q))
-      : ALL_ROUTES;
 
-    const unselected = candidates.filter((route) => !value.includes(route));
-    // Show search results efficiently: don't display all 2256 at once when not searching
-    return q ? unselected : unselected.slice(0, 50);
-  }, [query, value]);
+    let candidates: Lane[];
+    if (q) {
+      candidates = allLanes.filter(
+        (lane) =>
+          lane.origin.toLowerCase().includes(q) ||
+          lane.destination.toLowerCase().includes(q) ||
+          lane.label.toLowerCase().includes(q)
+      );
+    } else {
+      candidates = allLanes;
+    }
+
+    const unselected = candidates.filter((lane) => !selectedSet.has(lane.label));
+    if (q) return unselected;
+    // Shuffle for a dynamic first impression — re-randomizes each time dropdown opens
+    const shuffled = [...unselected];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled.slice(0, 50);
+  }, [query, allLanes, selectedSet, isOpen]);
 
   const selectRoute = useCallback(
-    (route: string) => {
-      if (!value.includes(route)) {
-        onChange([...value, route]);
+    (lane: Lane) => {
+      if (!selectedSet.has(lane.label)) {
+        onChange([...value, lane.label]);
       }
       setQuery("");
       setActiveIndex(-1);
       inputRef.current?.focus();
     },
-    [value, onChange]
+    [value, onChange, selectedSet]
   );
 
   const removeRoute = useCallback(
@@ -218,22 +232,31 @@ export function LaneSelectField({
             aria-label="Available routes"
             className="absolute z-50 mt-2 max-h-64 w-full overflow-y-auto rounded-2xl border border-line-strong bg-white p-1.5 shadow-[0_18px_40px_rgba(15,23,42,0.14)]"
           >
-            {filtered.length === 0 ? (
+            {loading ? (
+              <li className="flex items-center gap-2 px-3 py-3 text-sm text-muted">
+                <Icon name="spinner" size={14} className="animate-spin" />
+                Loading routes…
+              </li>
+            ) : loadError ? (
+              <li className="px-3 py-3 text-sm text-red-500">
+                Failed to load routes. Please refresh the page.
+              </li>
+            ) : filtered.length === 0 ? (
               <li className="px-3 py-3 text-sm text-muted">
                 No routes match &ldquo;{query || "your search"}&rdquo;
               </li>
             ) : (
-              filtered.map((route, i) => {
-                const isSelected = value.includes(route);
+              filtered.map((lane, i) => {
+                const isSelected = selectedSet.has(lane.label);
                 return (
                   <li
-                    key={route}
+                    key={lane.id}
                     id={`${id}-option-${i}`}
                     role="option"
                     aria-selected={isSelected || i === activeIndex}
                     onMouseDown={(e) => {
                       e.preventDefault();
-                      if (!isSelected) selectRoute(route);
+                      if (!isSelected) selectRoute(lane);
                     }}
                     onMouseEnter={() => setActiveIndex(i)}
                     className={cn(
@@ -243,7 +266,7 @@ export function LaneSelectField({
                     )}
                   >
                     <Icon name="route" size={13} className="shrink-0 text-muted/50" />
-                    <span className="flex-1">{route}</span>
+                    <span className="flex-1">{lane.label}</span>
                     {isSelected && (
                       <Icon name="check" size={13} className="shrink-0 text-accent" />
                     )}
