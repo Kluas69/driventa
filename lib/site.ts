@@ -25,8 +25,8 @@ export const site = {
 
   // REPLACE: contact details ---------------------------------------------------
   phone: {
-    display: "(555) 018-2340",
-    href: "tel:+15550182340",
+    display: "(703) 594-6995",
+    href: "tel:+17035946995",
   },
   email: "info@driventa.com",
   supportHours: "24/7 dispatch support",
@@ -44,7 +44,7 @@ export const site = {
   cta: {
     primary: { label: "Talk to a Dispatcher", href: "#contact" },
     secondary: { label: "See How It Works", href: "#how-it-works" },
-    call: { label: "Call Us", href: "tel:+15550182340" },
+    call: { label: "Call Us", href: "tel:+17035946995" },
     apply: { label: "Start My Application", href: "#contact" },
   },
 } as const;

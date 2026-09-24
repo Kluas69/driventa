@@ -266,7 +266,7 @@ site = {
   tagline: "Your trucks keep moving. We handle the dispatch.",
   description: "...", // SEO meta description
   url: "https://www.driventa.com",
-  phone: { display: "(555) 018-2340", href: "tel:+15550182340" },
+  phone: { display: "(703) 594-6995", href: "tel:+17035946995" },
   email: "dispatch@driventa.com",
   supportHours: "24/7 dispatch support",
   areaServed: "United States",
@@ -274,7 +274,7 @@ site = {
   cta: {
     primary: { label: "Get Started", href: "#contact" },
     secondary: { label: "See How It Works", href: "#how-it-works" },
-    call: { label: "Call Us", href: "tel:+15550182340" },
+    call: { label: "Call Us", href: "tel:+17035946995" },
     apply: { label: "Start My Application", href: "#contact" },
   },
 }
@@ -384,7 +384,7 @@ site = {
 
 | Data | Location | Status |
 |------|----------|--------|
-| Phone number | `lib/site.ts` | `+15550182340` (fake US 555 number) |
+| Phone number | `lib/site.ts` | `+17035946995` |
 | Email | `lib/site.ts` | `dispatch@driventa.com` |
 | Social links | `lib/site.ts` | Placeholder URLs |
 | Production URL | `lib/site.ts` | `https://www.driventa.com` |
